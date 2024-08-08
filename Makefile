@@ -1,6 +1,6 @@
 # LBM Makefile
 
-TARGET= panelMethod
+TARGET= vpm
 CXX= g++
 CXXFLAGS=-Wall -O3 -fopenmp -march=native
 SRCDIR= ./src
@@ -8,7 +8,7 @@ OBJDIR= ./obj
 RESTART= ./restart
 SOURCE= $(wildcard $(SRCDIR)/*.cpp)
 OBJECT= $(addprefix $(OBJDIR)/, $(notdir $(SOURCE:.cpp=.o)))
-OUTPUT= out.$(TARGET).txt field*.vtr output0* rst stt output0*.vtm geometryflag.vtm geometryflag stop *.txt ./Output
+OUTPUT= out.$(TARGET).txt field*.vtr output0* rst stt output0*.vtm geometryflag.vtm geometryflag stop *.txt ./output/*
 
 
 
