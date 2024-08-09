@@ -5,6 +5,9 @@
 #include "stretching.hpp"	
 #include "diffusion.hpp"
 #include "save_data.hpp"
+#include <time.h>
+#include <stdio.h>
+#include <algorithm>
 
 
 #include <iostream>
@@ -24,6 +27,7 @@ int main(int argc, char const *argv[]){
 	// TODO: Initial Particles Generation
 	std::cout << "Domain initialization ..." << std::endl;
 	initialization_step.init_vortex_ring(particle);
+	// initialization_step.init_2D_Test_Domain(particle);
 	std::cout << "Domain initialization (DONE)" << std::endl;
 	
 	int nt_start = 0;
@@ -34,13 +38,13 @@ int main(int argc, char const *argv[]){
     for(int it = nt_start; it < Parameters::nt; ++it)
     {
 		printf("+--------------- iter no. %d -------------------+\n", (int)it);
-        
-        // TODO: Poisson: solving Rotational Velocity, Stretching
-		advection_step.poisson(particle);	
+
+		// TODO: Poisson: solving Rotational Velocity, Stretching
+		advection_step.poisson(particle);
 
 		// TODO: Diffusion and Stretching Sub-step
-		// std::vector<std::vector<double>> _dfdtStr(3,std::vector<double>(particle.num));
-		// stretching_step.main_stretching(particle, _dfdtStr); 
+		std::vector<std::vector<double>> _dfdtStr(3,std::vector<double>(particle.num));
+		stretching_step.main_stretching(particle, _dfdtStr); 
 		std::vector<std::vector<double>> _dfdtDiff(3,std::vector<double>(particle.num));
 		diffusion_step.main_diffusion(particle, _dfdtDiff); 
 
@@ -49,13 +53,16 @@ int main(int argc, char const *argv[]){
 		{
         	particle.x[i] += Parameters::dt * (particle.u[i]);
         	particle.y[i] += Parameters::dt * (particle.v[i]);
-        	particle.z[i] += Parameters::dt * (particle.w[i]);			
-			particle.vort_x[i] += Parameters::dt * (_dfdtDiff[0][i] ); //_dfdtStr[0][i])
-			particle.vort_y[i] += Parameters::dt * (_dfdtDiff[1][i] ); //_dfdtStr[1][i])
-			particle.vort_z[i] += Parameters::dt * (_dfdtDiff[2][i] ); //_dfdtStr[2][i])
-			particle.gx[i] = particle.vort_x[i] * particle.s[i] * particle.s[i] * particle.s[i];
-			particle.gy[i] = particle.vort_y[i] * particle.s[i] * particle.s[i] * particle.s[i];
-			particle.gz[i] = particle.vort_z[i] * particle.s[i] * particle.s[i] * particle.s[i];
+        	particle.z[i] += Parameters::dt * (particle.w[i]);		
+			// std::cout << particle.vort_x[i] << " | " << (_dfdtStr[0][i]) << std::endl;
+			if (_dfdtStr[0][i] < 2 || _dfdtStr[1][i] < 2 || _dfdtStr[2][i] < 2 || _dfdtDiff[0][i] < 2 || _dfdtDiff[1][i] < 2 || _dfdtDiff[2][i] < 2){
+				particle.vort_x[i] += Parameters::dt * (_dfdtDiff[0][i]+_dfdtStr[0][i]); // 
+				particle.vort_y[i] += Parameters::dt * (_dfdtDiff[1][i]+_dfdtStr[1][i]); // 
+				particle.vort_z[i] += Parameters::dt * (_dfdtDiff[2][i]+_dfdtStr[2][i]); // 
+				particle.gx[i] = particle.vort_x[i] * particle.s[i] * particle.s[i] * particle.s[i];
+				particle.gy[i] = particle.vort_y[i] * particle.s[i] * particle.s[i] * particle.s[i];
+				particle.gz[i] = particle.vort_z[i] * particle.s[i] * particle.s[i] * particle.s[i];
+			}
 		}
 
 		// TODO: Saving data

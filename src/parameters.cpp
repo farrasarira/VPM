@@ -17,7 +17,7 @@ namespace Parameters {
     /** @brief parallel_comp */
     extern const double simulation_time = 10.0e0;
     extern const double comtime_sf = 1200.0e0 * 6000.0e0 * 6000.0e0; // % Save file frequently after how many [second]=[hour]*60*60, only in case of running is stopped suddenly, but nt_sf take long days
-    extern const double dt = 0.0005;      // default:0.001, dt <= phi_s*sigma^2/vis (Ploumhans [2000]) OR dt = phi_s*sigma^2*Courant^2/vis, where 0 < Courant <= 1
+    extern const double dt = 0.05;      // default:0.001, dt <= phi_s*sigma^2/vis (Ploumhans [2000]) OR dt = phi_s*sigma^2*Courant^2/vis, where 0 < Courant <= 1
     extern const int nt = std::ceil(simulation_time / dt); // number of time step
     extern const int nt_sf = 50;                           // save data per ( nt_sf ) time step, for saving storage MEMORY and for case of running is stopped suddenly
 

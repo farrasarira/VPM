@@ -214,3 +214,54 @@ void initialization::init_vortex_ring(Particle &p)
     p = _particle;
 }
 
+void initialization::init_2D_Test_Domain(Particle &p)
+{    
+    const double lx = 1.0;
+    const double ly = 1.0;
+
+    const int nx = 100;
+    const int ny = 100;
+
+    const double blob_size = 1.0/nx;
+
+    Particle _particle;
+    int _nparticle = 0;
+
+    for (int iter_x = 0; iter_x <= nx; ++iter_x){
+        for (int iter_y = 0; iter_y <= ny; ++iter_y){
+            double xpos = blob_size*iter_x;
+            double ypos = blob_size*iter_y;
+            double zpos = 0.0;
+            double vort_mag = 0.0;
+            double xvort = 0.0;
+            double yvort = 0.0;
+            double zvort = 0.0;
+            double ux = 0.1*pow(xpos,2)+0.2*pow(ypos,2)+0.3*xpos*ypos+0.4*xpos+0.5*ypos+0.6;
+            double uy = 0.0;
+            double uz = 0.0;
+
+            _particle.x.push_back(xpos);
+            _particle.y.push_back(ypos);
+            _particle.z.push_back(zpos);
+            _particle.s.push_back(blob_size);
+            _particle.gx.push_back(xvort*blob_size*blob_size*blob_size);
+            _particle.gy.push_back(yvort*blob_size*blob_size*blob_size);
+            _particle.gz.push_back(zvort*blob_size*blob_size*blob_size); 
+            _particle.vort_x.push_back(xvort);
+            _particle.vort_y.push_back(yvort);
+            _particle.vort_z.push_back(zvort);                 
+            _particle.u.push_back(ux);
+            _particle.v.push_back(uy);
+            _particle.w.push_back(uz);
+            _nparticle++;
+            
+
+        }
+    }
+    _particle.num = _nparticle;
+    _particle.isActive.resize(_nparticle, true);
+
+    _particle.neighbor = d_neighbor.direct_find(_particle.num, _particle.s, _particle.x, _particle.y, _particle.z, Parameters::r_scale);
+
+    p = _particle;
+}

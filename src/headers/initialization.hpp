@@ -17,6 +17,8 @@ public:
     //3D Particles initialization
     void init_domain(Particle &p);
     void init_vortex_ring(Particle &p);
+    void init_2D_Test_Domain(Particle &p);
+
 
 
 };
