@@ -16,8 +16,7 @@ public:
 
     //3D Particles initialization
     void init_domain(Particle &p);
-    void init_vorticity(Particle &p);
-    void initializeVortexRing(Particle &particle, int num_particles, double ring_radius, double ring_thickness, double core_size, double vortex_strength);
+    void init_vortex_ring(Particle &p);
 
 
 };

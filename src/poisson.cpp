@@ -29,7 +29,7 @@ void poisson_solver::poisson(Particle &p)
 	_particleDense.num = 0;
 
 	// TODO: store current active particles
-	for (size_t i = 0; i < p.num; i++)
+	for (int i = 0; i < p.num; i++)
 	{
 		if (p.isActive[i] == true)
 		{
@@ -55,14 +55,11 @@ void poisson_solver::poisson(Particle &p)
 		}
 	}
 
-	Particle _particle_ds;
-	_particle_ds = _particle;
-
 	// TODO: calculate velocity using treecode 
 	// d_base_poisson_3d.biotsavart_treecode_3d(_particle,_particle);
 	
 	// // TODO: calculate velocity using direct sum
-	d_base_poisson_3d.biotsavart_direct_3d(_particle_ds,_particle_ds);
+	d_base_poisson_3d.biotsavart_direct_3d(_particle,_particle);
 
 	// update base particle velocity
 	for (size_t i = 0; i < _particle.num; i++)

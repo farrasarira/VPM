@@ -16,6 +16,7 @@ namespace Parameters {
     extern const double sigma;   // Coresize, default: 0.0025, dt~(1/2)*sigma - (1/3)*sigma
 
     extern const double Re; // REYNOLDs NUMBER
+    extern const double vis;    
 
     /** @brief parallel_comp */
     extern const double simulation_time;
@@ -29,6 +30,8 @@ namespace Parameters {
     extern const double lz;         // 3D Unbounded : vortex ring thickness, 3D cylinder disc: diameter
 
     extern const int r_scale; 
+    extern const double er;       // elliptical ratio ex:ey
+
 
     extern const int icutoff;    // 0.singular ;  1.super (high-oder) algebraic  ; 2. Gaussian  ; 3 super Gaussian
 

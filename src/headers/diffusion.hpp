@@ -3,19 +3,17 @@
 
 #include <vector>
 #include "particle.hpp"
+#include "LSMPSa.hpp"
 
-class base_poisson;
 ////class base_dc;
-class neighbor;
-class LSMPSa;
 class diffusion
 {
 	// ** creating instances
 	// base_poisson d_base_poisson;
 	// neighbor d_neighbor; // linked_list, direct_find
-	// LSMPSa lsmpsa_x;		 // tu calculate laplacian
-	// LSMPSa lsmpsa_y;
-	// LSMPSa lsmpsa_z;
+	LSMPSa lsmpsa_x;		 // tu calculate laplacian
+	LSMPSa lsmpsa_y;
+	LSMPSa lsmpsa_z;
 	//// base_dc d_base_dc;
 
 	// TODO: PSE scheme

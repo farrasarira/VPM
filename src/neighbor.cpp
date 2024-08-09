@@ -32,7 +32,7 @@ std::vector<std::vector<int>> neighbor::direct_find(const int np, const std::vec
 
     ////pair_i.clear();
     ////pair_j.clear();
-    #pragma omp parallel for
+    // #pragma omp parallel for
     for (int i = 0; i < np - 1; i++)
     {
         for (int j = i + 1; j < np; j++)

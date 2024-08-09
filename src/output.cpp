@@ -62,7 +62,6 @@ void save_data::output(int it, Particle &p, Body &b, double &cum_time)
 		// If not incase of "later saving grid data", (if not do the file can be rewired)
 		if (true) // save only particles, or save particles and grid at same time
 		{
-			std::cout << "masuk pakk" << std::endl;
 			// Save common data (information of free particles):
 			name1.append("output/x_vor_vel_particle_");
 			name1.append(nData);

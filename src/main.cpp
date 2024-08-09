@@ -2,7 +2,7 @@
 #include "particle.hpp"
 #include "initialization.hpp"
 #include "poisson.hpp"
-#include "strethcing.hpp"
+#include "stretching.hpp"	
 #include "diffusion.hpp"
 #include "save_data.hpp"
 
@@ -21,53 +21,42 @@ int main(int argc, char const *argv[]){
 	diffusion diffusion_step;
 	save_data save_step;
 
-
 	// TODO: Initial Particles Generation
 	std::cout << "Domain initialization ..." << std::endl;
-	initialization_step.init_domain(particle);
+	initialization_step.init_vortex_ring(particle);
 	std::cout << "Domain initialization (DONE)" << std::endl;
-	initialization_step.init_vorticity(particle);
-
-	// int num_particles = 100;
-    // double ring_radius = 1.0;
-    // double ring_thickness = 0.1; // Not used in this basic example, but can be used for more complex initialization
-    // double core_size = 0.1;
-    // double vortex_strength = 1.0;
-
-	// initializeVortexRing(vortex_ring, num_particles, ring_radius, ring_thickness, core_size, vortex_strength);
-
+	
 	int nt_start = 0;
 	double cum_time = 0.0; // actual cumulative time
 	std::vector<double> _cumulativeTime;
 	clock_t delta_t; // actual time difference
 
-    for(size_t it = nt_start; it < Parameters::nt; ++it)
+    for(int it = nt_start; it < Parameters::nt; ++it)
     {
 		printf("+--------------- iter no. %d -------------------+\n", (int)it);
         
         // TODO: Poisson: solving Rotational Velocity, Stretching
 		advection_step.poisson(particle);	
-		// std::cout << "masuk" << std::endl;
 
-		// // TODO: Diffusion and Stretching Sub-step
+		// TODO: Diffusion and Stretching Sub-step
 		// std::vector<std::vector<double>> _dfdtStr(3,std::vector<double>(particle.num));
 		// stretching_step.main_stretching(particle, _dfdtStr); 
-		// std::vector<std::vector<double>> _dfdtDiff(3,std::vector<double>(particle.num));
-		// diffusion_step.main_diffusion(particle, _dfdtDiff); 
+		std::vector<std::vector<double>> _dfdtDiff(3,std::vector<double>(particle.num));
+		diffusion_step.main_diffusion(particle, _dfdtDiff); 
 
-		// // Update Particle (Euler Scheme)
-		// for (size_t i = 0; i < particle.num; i++)
-		// {
-        // 	particle.x[i] += Parameters::dt * (particle.u[i]);
-        // 	particle.y[i] += Parameters::dt * (particle.v[i]);
-        // 	particle.z[i] += Parameters::dt * (particle.w[i]);			
-		// 	particle.vort_x[i] += Parameters::dt * (_dfdtDiff[0][i] + _dfdtStr[0][i]);
-		// 	particle.vort_y[i] += Parameters::dt * (_dfdtDiff[1][i] + _dfdtStr[1][i]);
-		// 	particle.vort_z[i] += Parameters::dt * (_dfdtDiff[2][i] + _dfdtStr[2][i]);
-		// 	particle.gx[i] = particle.vort_x[i] * particle.s[i] * particle.s[i] * particle.s[i];
-		// 	particle.gy[i] = particle.vort_y[i] * particle.s[i] * particle.s[i] * particle.s[i];
-		// 	particle.gz[i] = particle.vort_z[i] * particle.s[i] * particle.s[i] * particle.s[i];
-		// }
+		// Update Particle (Euler Scheme)
+		for (size_t i = 0; i < particle.num; i++)
+		{
+        	particle.x[i] += Parameters::dt * (particle.u[i]);
+        	particle.y[i] += Parameters::dt * (particle.v[i]);
+        	particle.z[i] += Parameters::dt * (particle.w[i]);			
+			particle.vort_x[i] += Parameters::dt * (_dfdtDiff[0][i] ); //_dfdtStr[0][i])
+			particle.vort_y[i] += Parameters::dt * (_dfdtDiff[1][i] ); //_dfdtStr[1][i])
+			particle.vort_z[i] += Parameters::dt * (_dfdtDiff[2][i] ); //_dfdtStr[2][i])
+			particle.gx[i] = particle.vort_x[i] * particle.s[i] * particle.s[i] * particle.s[i];
+			particle.gy[i] = particle.vort_y[i] * particle.s[i] * particle.s[i] * particle.s[i];
+			particle.gz[i] = particle.vort_z[i] * particle.s[i] * particle.s[i] * particle.s[i];
+		}
 
 		// TODO: Saving data
 		// delta_t = clock() - delta_t;							   // actual time [s]
@@ -76,7 +65,7 @@ int main(int argc, char const *argv[]){
 		// cum_time = cum_time + (double)delta_t / CLOCKS_PER_SEC; // cumulative time
 
 		int _numberOfActiceParticle = 0;
-		for (size_t i = 0; i < particle.num; i++)
+		for (int i = 0; i < particle.num; i++)
 		{
 			if (particle.isActive[i])
 			{
@@ -100,6 +89,9 @@ int main(int argc, char const *argv[]){
 		std::cout << "\nnumber of particles: " << _numberOfActiceParticle << std::endl;
 		// std::cout << "\ncomputation time: " << cum_time << std::endl;
 		save_step.output(it, particle, body, cum_time);
+
+		// if(it == nt_start)
+		// 	break;
 
 
 
